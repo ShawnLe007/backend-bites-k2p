@@ -1,0 +1,79 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+
+group = 'com.shawnle007.bites'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "http://packages.confluent.io/maven/" }
+}
+
+ext {
+    set('springCloudVersion', "Hoxton.SR1")
+}
+
+dependencies {
+    implementation ("org.springframework.boot:spring-boot-starter-data-jpa") {
+        exclude module: "spring-boot-starter-logging"
+        exclude module: "logback-classic"
+    }
+
+    implementation("org.springframework.boot:spring-boot-starter-security") {
+        exclude module: "spring-boot-starter-logging"
+        exclude module: "logback-classic"
+    }
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-logging"
+        exclude module: "logback-classic"
+    }
+
+    implementation 'org.springframework.cloud:spring-cloud-stream'
+    implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
+
+    // https://mvnrepository.com/artifact/io.confluent/kafka-avro-serializer
+    compile group: 'io.confluent', name: 'kafka-avro-serializer', version: '3.3.1'
+    // https://mvnrepository.com/artifact/io.confluent/kafka-schema-registry
+    compile group: 'io.confluent', name: 'kafka-schema-registry', version: '4.1.0'
+    compile group: 'org.apache.avro', name: 'avro', version: '1.9.1'
+
+    compileOnly 'org.projectlombok:lombok'
+
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+configurations.all {
+//    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    exclude group: 'org.springframework.boot', module: 'logback-classic'
+//    exclude group: "org.slf4j"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

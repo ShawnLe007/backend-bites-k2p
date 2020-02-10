@@ -1,0 +1,19 @@
+{
+  "namespace": "example.shawnle007.domain",
+  "type": "record",
+  "name": "entry",
+  "fields": [
+    {
+      "name": "id",
+      "type": "long"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "bucket",
+      "type": "string"
+    }
+  ]
+}
